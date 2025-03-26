@@ -1,8 +1,10 @@
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public class Main {
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) throws FileNotFoundException {
 //        SwingUtilities.invokeLater(new Runnable()
 //        {
 //            public void run()
@@ -10,7 +12,11 @@ public class Main {
 //                constructGUI();
 //            }
 //        });
-        JSON_Parser jParser = new JSON_Parser();
+        try {
+            JSON_Parser jParser = new JSON_Parser();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 //    static void constructGUI() //this method creates a MyFrame object that calls the initialization of my JFrame

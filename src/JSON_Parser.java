@@ -1,47 +1,61 @@
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.*;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class JSON_Parser
 {
 
 
-    JSON_Parser()
-    {
-        // Creating an object of Gson class
-        Gson gson = new Gson();
-
-        skills _skills = new skills();
-
-       //File file = new File("../SkillTree.json");
-
-        ArrayList<String> sample = new ArrayList<>();
-        for(int i = 0; i < 2; i++)
-        {
-            sample.add("1");
+    JSON_Parser() throws IOException {
+        readSkillTree();
+        try {
+            writeSkillTree();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        // Generating emp object from _skills json
-        skills _skillsGenerated = gson.fromJson(
-                "../SkillTree.json", skills.class);
+    }
 
-        // Print and display the employee been generated
-        System.out.println(
-                "Generated employee from json is "
-                        + _skillsGenerated);
-//        _skills.setId("1");
-//        _skills.setName("Skill Tree");
-//        _skills.setDescription("");
-//        _skills.setCost(30);
-//        _skills.setEffect("");
-//        _skills.setPrerequisites(sample);
-//
-//        // Generating json from _skills object
-//        String _skillsJson = gson.toJson(_skills);
-//        System.out.println("Emp json is " + _skillsJson);
-//
-//        // Changing one of the attributes of emp object
-//        _skills.setEffect("Java");
+    public void readSkillTree() throws FileNotFoundException{
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
+        // Read JSON file
+        Reader reader = new FileReader("SkillTree.json");
 
+        // Parse JSON
+        JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
+
+        // Deserialize the "skill_tree" object
+        SkillTree skillTree = gson.fromJson(jsonObject.getAsJsonObject("skill_tree"), SkillTree.class);
+
+        // Print the skill tree
+        System.out.println("Skill Tree Name: " + skillTree.name);
+        for (SkillNode node : skillTree.nodes) {
+            System.out.println("Skill: " + node.name + " | Description: " + node.description +
+                    " | Cost: " + node.cost +  " | Effect: " + node.effect +
+                    " | Prerequisites: " + node.prerequisites);
+        }
+    }
+
+    public void writeSkillTree() throws IOException {
+        SkillTree skillTree = new SkillTree();
+        skillTree.name = "Final Fantasy XVI Skill Tree";
+        skillTree.nodes = List.of(
+                new SkillNode("1", "Lunge", "A fast thrust attack to close the distance.", 100, "Increases attack speed when closing distance.", List.of()),
+                new SkillNode("2", "Rising Flame", "A fiery uppercut that launches enemies.", 200, "Launches enemies into the air.", List.of("1"))
+        );
+
+        // Convert to JSON and write to a file
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        try (FileWriter writer = new FileWriter("OutputSkillTree.json")) {
+            gson.toJson(skillTree, writer);
+            System.out.println("Skill tree successfully written to ../OutputSkillTree.json.json");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

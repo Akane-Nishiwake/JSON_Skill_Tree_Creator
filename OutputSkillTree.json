@@ -1,0 +1,21 @@
+{
+  "name": "Final Fantasy XVI Skill Tree",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "Lunge",
+      "description": "A fast thrust attack to close the distance.",
+      "cost": 100,
+      "effect": "Increases attack speed when closing distance.",
+      "prerequisites": []
+    },
+    {
+      "id": "2",
+      "name": "Rising Flame",
+      "description": "A fiery uppercut that launches enemies.",
+      "cost": 200,
+      "effect": "Launches enemies into the air.",
+      "prerequisites": []
+    }
+  ]
+}

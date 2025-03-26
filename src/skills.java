@@ -1,61 +1,25 @@
 import java.util.ArrayList;
+import java.util.List;
 
-public class skills
-{
-    //class members
-    private String id;
-    private String name;
-    private String description;
-    private int cost;
-    private String effect;
-    private ArrayList<String> prerequisites;
+class SkillTree {
+    String name;
+    List<SkillNode> nodes;
+}
 
-    //constructor
-    skills() {}
+class SkillNode {
+    String id;
+    String name;
+    String description;
+    int cost;
+    String effect;
+    List<String> prerequisites;
 
-    //setters
-    public void setId(String id) {
-        this.id = id;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public void setCost(int cost) {
-        this.cost = cost;
-    }
-    public void setEffect(String effect) {
-        this.effect = effect;
-    }
-    public void setPrerequisites(ArrayList<String> prerequisites) {
-        this.prerequisites = prerequisites;
-    }
-
-    //getters
-    public String getId() {
-        return id;
-    }
-    public String getName() {
-        return name;
-    }
-    public String getDescription() {
-        return description;
-    }
-    public int getCost() {
-        return cost;
-    }
-    public String getEffect() {
-        return effect;
-    }
-    public ArrayList<String> getPrerequisites() {
-        return prerequisites;
-    }
-
-    @Override public String toString() {
-        return "Skills [id=" + id + ", name=" + name + ", description=" +
-                description + ", cost=" + cost + ", effect=" + effect +
-                ", prerequisites=" + prerequisites + "]";
+    public <E> SkillNode(String number, String lunge, String s, int i, String s1, List<E> of) {
+        id = number;
+        name = lunge;
+        description = s;
+        cost = i;
+        effect = s1;
+        prerequisites = new ArrayList<>();
     }
 }

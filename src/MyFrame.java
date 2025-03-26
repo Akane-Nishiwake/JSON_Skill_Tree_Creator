@@ -23,7 +23,6 @@ public class MyFrame extends JFrame {
     private JList outputFileList;
     private JButton AddFile;
     private JPanel actionButtonPanel;
-    private JMenuBar menuBar;
     private JMenu fileMenu;
     private JMenu previewMenu;
     private JMenu settingsMenu;
@@ -48,7 +47,7 @@ public class MyFrame extends JFrame {
     }
 
     private void setMenuBar() {
-        menuBar = new JMenuBar();
+        JMenuBar menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
         settingsMenu = new JMenu("Settings");
         previewMenu = new JMenu("Preview");

@@ -1,17 +1,21 @@
-
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 
 public class MyFrame extends JFrame{
 
     private JPanel panel1;
-    private JTextArea textArea1;
-    private JTextArea textArea2;
     private JSplitPane splitPane;
     private JScrollPane scrollLeftPane;
     private JScrollPane scrollRightPane;
-    private JButton cancelButton;
-    private JButton saveButton;
+    private JButton convertToJSON;
+    private JButton convertToPDF;
     private JPanel utilityOptionsPanel;
+    private JList inputFileList;
+    private JList outputFileList;
 
 
     public MyFrame()

@@ -14,6 +14,10 @@ public class PDF_Parser {
         String inputJson = "SkillTree.json"; // Input JSON file
         String outputPdf = "OutputSkillTree.pdf"; // Output PDF file
 
+        writePDF(inputJson, outputPdf);
+    }
+
+    private static void writePDF(String inputJson, String outputPdf) {
         try {
             // Read JSON file
             Gson gson = new Gson();

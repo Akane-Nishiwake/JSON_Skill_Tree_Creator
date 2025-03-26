@@ -16,6 +16,7 @@ public class MyFrame extends JFrame {
     private JPanel utilityOptionsPanel;
     private JList inputFileList;
     private JList outputFileList;
+    private JButton AddFile;
 
 
     public MyFrame() {

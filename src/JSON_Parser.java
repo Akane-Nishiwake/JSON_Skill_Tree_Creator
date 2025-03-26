@@ -12,19 +12,22 @@ public class JSON_Parser
 
 
     JSON_Parser() throws IOException {
-        readSkillTree();
+        String filename = "SkillTree.json";
+        readSkillTree(filename);
         try {
-            writeSkillTree();
+            String filename2 = "OutputSkillTree.json";
+            writeSkillTree(filename2);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void readSkillTree() throws FileNotFoundException{
+
+    public void readSkillTree(String filename) throws FileNotFoundException{
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         // Read JSON file
-        Reader reader = new FileReader("SkillTree.json");
+        Reader reader = new FileReader(filename);
 
         // Parse JSON
         JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
@@ -41,7 +44,8 @@ public class JSON_Parser
         }
     }
 
-    public void writeSkillTree() throws IOException {
+    public void writeSkillTree(String filename) throws IOException {
+        //Create the object needed
         SkillTree skillTree = new SkillTree();
         skillTree.name = "Final Fantasy XVI Skill Tree";
         skillTree.nodes = List.of(
@@ -51,7 +55,7 @@ public class JSON_Parser
 
         // Convert to JSON and write to a file
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        try (FileWriter writer = new FileWriter("OutputSkillTree.json")) {
+        try (FileWriter writer = new FileWriter(filename)) {
             gson.toJson(skillTree, writer);
             System.out.println("Skill tree successfully written to ../OutputSkillTree.json.json");
         } catch (IOException e) {

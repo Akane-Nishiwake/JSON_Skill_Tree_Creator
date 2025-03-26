@@ -17,6 +17,7 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        PDF_Parser pParser = new PDF_Parser();
     }
 
 //    static void constructGUI() //this method creates a MyFrame object that calls the initialization of my JFrame

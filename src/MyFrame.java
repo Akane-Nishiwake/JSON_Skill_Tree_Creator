@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 
 public class MyFrame extends JFrame {
 
-    private JPanel panel1;
+    private JPanel mainPanel;
     private JSplitPane splitPane;
     private JScrollPane scrollLeftPane;
     private JScrollPane scrollRightPane;
@@ -22,9 +22,10 @@ public class MyFrame extends JFrame {
     private JList inputFileList;
     private JList outputFileList;
     private JButton AddFile;
+    private JPanel actionButtonPanel;
     private JMenuBar menuBar;
     private JMenu fileMenu;
-    private JMenu editMenu;
+    private JMenu previewMenu;
     private JMenu settingsMenu;
 
 
@@ -34,35 +35,35 @@ public class MyFrame extends JFrame {
     }
 
     private void init() {
-        createPanel();
-        setMenuBar();
-
+        createMainPanel();
     }
-    private void createPanel()
-    {
+
+    private void createMainPanel() {
         setTitle("Skill Tree Creator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setContentPane(panel1);
+        setContentPane(mainPanel);
         pack();
         setLocationRelativeTo(null);
+        setMenuBar();
     }
-    private void setMenuBar()
-    {
+
+    private void setMenuBar() {
         menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
-        editMenu = new JMenu("Edit");
         settingsMenu = new JMenu("Settings");
+        previewMenu = new JMenu("Preview");
 
         setFileMenu();
         setSettingsMenu();
 
         menuBar.add(fileMenu);
-        menuBar.add(editMenu);
         menuBar.add(settingsMenu);
+        menuBar.add(previewMenu);
+
         this.setJMenuBar(menuBar);
     }
-    private void setFileMenu()
-    {
+
+    private void setFileMenu() {
         JMenuItem newItem = new JMenuItem("New");
         JMenuItem openItem = new JMenuItem("Open");
         JMenuItem saveItem = new JMenuItem("Save");
@@ -79,8 +80,7 @@ public class MyFrame extends JFrame {
         });
     }
 
-    private void setSettingsMenu ()
-    {
+    private void setSettingsMenu() {
         JMenuItem preferencesItem = new JMenuItem("Preferences");
         settingsMenu.add(preferencesItem);
     }

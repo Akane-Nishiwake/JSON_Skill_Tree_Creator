@@ -17,16 +17,17 @@ public class JSON_Parser {
 
     public void run() throws IOException
     {
-        readSkillTree(mInputFileName);
+        SkillTree skillTree = new SkillTree();
+        skillTree = readSkillTree(mInputFileName);
         try {
-            writeSkillTree(mOutputFileName);
+            writeSkillTree(mOutputFileName, skillTree);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
 
-    public void readSkillTree(String filename) throws FileNotFoundException {
+    public SkillTree readSkillTree(String filename) throws FileNotFoundException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         // Read JSON file
@@ -45,11 +46,11 @@ public class JSON_Parser {
                     " | Cost: " + node.cost + " | Effect: " + node.effect +
                     " | Prerequisites: " + node.prerequisites);
         }
+        return skillTree;
     }
 
-    public void writeSkillTree(String filename) throws IOException {
+    public void writeSkillTree(String filename, SkillTree skillTree) throws IOException {
         //Create the object needed
-        SkillTree skillTree = new SkillTree();
         skillTree.name = "Final Fantasy XVI Skill Tree";
         skillTree.nodes = List.of(
                 new SkillNode("1", "Lunge", "A fast thrust attack to close the distance.", 100, "Increases attack speed when closing distance.", List.of()),

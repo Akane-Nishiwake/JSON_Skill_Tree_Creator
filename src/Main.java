@@ -4,13 +4,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 constructGUI();
     }
         });
        JSON_Parser jParser = new JSON_Parser("SkillTree.json", "OutputSkillTree.json");
+       jParser.run();
        PDF_Parser pParser = new PDF_Parser();
     }
 

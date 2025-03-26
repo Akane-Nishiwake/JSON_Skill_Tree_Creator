@@ -7,14 +7,19 @@ import java.io.*;
 import java.util.List;
 
 public class JSON_Parser {
+    private String mInputFileName;
+    private String mOutputFileName;
 
+    JSON_Parser(String inputFileName, String outputFileName) {
+        mInputFileName = inputFileName;
+        mOutputFileName = outputFileName;
+    }
 
-    JSON_Parser() throws IOException {
-        String filename = "SkillTree.json";
-        readSkillTree(filename);
+    public void run() throws IOException
+    {
+        readSkillTree(mInputFileName);
         try {
-            String filename2 = "OutputSkillTree.json";
-            writeSkillTree(filename2);
+            writeSkillTree(mOutputFileName);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

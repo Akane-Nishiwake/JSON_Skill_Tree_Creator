@@ -5,11 +5,9 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-       SwingUtilities.invokeLater(new Runnable()
-        {
-           public void run()
-            {
-               constructGUI();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                constructGUI();
             }
         });
 //        try {

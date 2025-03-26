@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
-public class MyFrame extends JFrame{
+public class MyFrame extends JFrame {
 
     private JPanel panel1;
     private JSplitPane splitPane;
@@ -18,13 +18,12 @@ public class MyFrame extends JFrame{
     private JList outputFileList;
 
 
-    public MyFrame()
-    {
+    public MyFrame() {
         super();
         init(); //calling the init on construction of the class.
     }
-    private void init()
-    {
+
+    private void init() {
         setTitle("Skill Tree Creator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setContentPane(panel1);

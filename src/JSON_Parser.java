@@ -2,11 +2,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import java.io.*;
 import java.util.List;
 
-public class JSON_Parser
-{
+public class JSON_Parser {
 
 
     JSON_Parser() throws IOException {
@@ -21,7 +21,7 @@ public class JSON_Parser
     }
 
 
-    public void readSkillTree(String filename) throws FileNotFoundException{
+    public void readSkillTree(String filename) throws FileNotFoundException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         // Read JSON file
@@ -37,7 +37,7 @@ public class JSON_Parser
         System.out.println("Skill Tree Name: " + skillTree.name);
         for (SkillNode node : skillTree.nodes) {
             System.out.println("Skill: " + node.name + " | Description: " + node.description +
-                    " | Cost: " + node.cost +  " | Effect: " + node.effect +
+                    " | Cost: " + node.cost + " | Effect: " + node.effect +
                     " | Prerequisites: " + node.prerequisites);
         }
     }

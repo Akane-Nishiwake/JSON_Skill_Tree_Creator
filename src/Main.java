@@ -10,7 +10,7 @@ public class Main {
                 constructGUI();
     }
         });
-       JSON_Parser jParser = new JSON_Parser("SkillTree.json", "OutputSkillTree.json");
+       JSON_Parser jParser = new JSON_Parser("SkillTree.json");
        jParser.run();
        PDF_Parser pParser = new PDF_Parser(jParser);
     }

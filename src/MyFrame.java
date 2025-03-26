@@ -46,7 +46,7 @@ public class MyFrame extends JFrame {
         pack();
         setLocationRelativeTo(null);
         setMenuBar();
-        JSON_Parser jparser = new JSON_Parser(inputFileName, outputFileName);
+        JSON_Parser jparser = new JSON_Parser(inputFileName);
 
     }
 

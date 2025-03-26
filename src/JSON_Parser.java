@@ -11,9 +11,9 @@ public class JSON_Parser {
     private String mOutputFileName;
     private SkillTree mSkillTree;
 
-    JSON_Parser(String inputFileName, String outputFileName) {
+    JSON_Parser(String inputFileName) {
         mInputFileName = inputFileName;
-        mOutputFileName = outputFileName;
+        mOutputFileName = "Output"+getInputFileName();
         mSkillTree = new SkillTree();
     }
 

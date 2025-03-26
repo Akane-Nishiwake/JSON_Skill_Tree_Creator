@@ -12,7 +12,7 @@ public class Main {
         });
        JSON_Parser jParser = new JSON_Parser("SkillTree.json", "OutputSkillTree.json");
        jParser.run();
-       PDF_Parser pParser = new PDF_Parser();
+       PDF_Parser pParser = new PDF_Parser(jParser);
     }
 
     static void constructGUI() //this method creates a MyFrame object that calls the initialization of my JFrame

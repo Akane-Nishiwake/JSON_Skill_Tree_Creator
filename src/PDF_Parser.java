@@ -11,9 +11,12 @@ import java.io.IOException;
 
 public class PDF_Parser {
 
-    PDF_Parser() {
-        String inputJson = "SkillTree.json"; // Input JSON file
-        String outputPdf = "OutputSkillTree.pdf"; // Output PDF file
+    private String inputJson;
+    private JSON_Parser jsonParser;
+    PDF_Parser(JSON_Parser jsonParser) {
+        this.jsonParser = jsonParser;
+        String inputJson = this.jsonParser.getInputFileName(); // Input JSON file
+        String outputPdf = "Output"+ this.jsonParser.getInputFileWithoutExtension()+".pdf"; // Output PDF file
 
         writePDF(inputJson, outputPdf);
     }

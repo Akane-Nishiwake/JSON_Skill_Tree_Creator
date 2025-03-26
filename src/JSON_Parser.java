@@ -9,18 +9,33 @@ import java.util.List;
 public class JSON_Parser {
     private String mInputFileName;
     private String mOutputFileName;
+    private SkillTree mSkillTree;
 
     JSON_Parser(String inputFileName, String outputFileName) {
         mInputFileName = inputFileName;
         mOutputFileName = outputFileName;
+        mSkillTree = new SkillTree();
+    }
+
+    public String getInputFileName() {
+        return mInputFileName;
+    }
+    public String getInputFileWithoutExtension() {
+        String result = "";
+        if (mInputFileName.endsWith(".json")) {
+            result = mInputFileName.substring(0, mInputFileName.length() - 5);
+        }
+        return result;
+    }
+    public String getOutputFileName() {
+        return mOutputFileName;
     }
 
     public void run() throws IOException
     {
-        SkillTree skillTree = new SkillTree();
-        skillTree = readSkillTree(mInputFileName);
+        mSkillTree = readSkillTree(mInputFileName);
         try {
-            writeSkillTree(mOutputFileName, skillTree);
+            writeSkillTree(mOutputFileName);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -49,18 +64,13 @@ public class JSON_Parser {
         return skillTree;
     }
 
-    public void writeSkillTree(String filename, SkillTree skillTree) throws IOException {
+    public void writeSkillTree(String filename) throws IOException {
         //Create the object needed
-        skillTree.name = "Final Fantasy XVI Skill Tree";
-        skillTree.nodes = List.of(
-                new SkillNode("1", "Lunge", "A fast thrust attack to close the distance.", 100, "Increases attack speed when closing distance.", List.of()),
-                new SkillNode("2", "Rising Flame", "A fiery uppercut that launches enemies.", 200, "Launches enemies into the air.", List.of("1"))
-        );
 
         // Convert to JSON and write to a file
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try (FileWriter writer = new FileWriter(filename)) {
-            gson.toJson(skillTree, writer);
+            gson.toJson(mSkillTree, writer);
             System.out.println("Skill tree successfully written to ../OutputSkillTree.json.json");
         } catch (IOException e) {
             e.printStackTrace();

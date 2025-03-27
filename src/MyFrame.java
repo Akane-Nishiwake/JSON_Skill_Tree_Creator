@@ -52,7 +52,31 @@ public class MyFrame extends JFrame {
         pack();
         setLocationRelativeTo(null);
         setMenuBar();
+        AddFile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                chooser.setDialogTitle("Select a JSON file");
+                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                int userSelection = chooser.showOpenDialog(null);
 
+                if (userSelection == JFileChooser.APPROVE_OPTION) {
+                    inputFileName = chooser.getSelectedFile().getName();
+                    jparser = new JSON_Parser(inputFileName);
+                    if(inputFileList.getModel() instanceof DefaultListModel) {
+                        DefaultListModel<String> model = (DefaultListModel<String>) inputFileList.getModel();
+                        model.addElement(inputFileName);
+                    }
+                    else {
+                        DefaultListModel<String> model = new DefaultListModel<>();
+                        model.addElement(inputFileName);
+                        inputFileList.setModel(model);
+                    }
+                }
+
+
+            }
+        });
     }
 
     private void setMenuBar() {
@@ -118,5 +142,6 @@ public class MyFrame extends JFrame {
         JMenuItem preferencesItem = new JMenuItem("Preferences");
         settingsMenu.add(preferencesItem);
     }
+
 
 }

@@ -7,8 +7,13 @@ import javax.swing.JSplitPane;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JFileChooser;
+import javax.swing.DefaultListModel;
+import java.io.File;
+
 
 public class MyFrame extends JFrame {
 
@@ -28,6 +33,7 @@ public class MyFrame extends JFrame {
     private JMenu settingsMenu;
     private String inputFileName;
     private String outputFileName;
+    private JSON_Parser jparser;
 
 
     public MyFrame() {
@@ -46,7 +52,6 @@ public class MyFrame extends JFrame {
         pack();
         setLocationRelativeTo(null);
         setMenuBar();
-        JSON_Parser jparser = new JSON_Parser(inputFileName);
 
     }
 
@@ -71,10 +76,36 @@ public class MyFrame extends JFrame {
         JMenuItem openItem = new JMenuItem("Open");
         JMenuItem saveItem = new JMenuItem("Save");
         JMenuItem exitItem = new JMenuItem("Exit");
+
         fileMenu.add(newItem);
         fileMenu.add(openItem);
         fileMenu.add(saveItem);
         fileMenu.add(exitItem);
+        openItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                chooser.setDialogTitle("Select a JSON file");
+                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                int userSelection = chooser.showOpenDialog(null);
+
+                if (userSelection == JFileChooser.APPROVE_OPTION) {
+                    inputFileName = chooser.getSelectedFile().getName();
+                    jparser = new JSON_Parser(inputFileName);
+                    if(inputFileList.getModel() instanceof DefaultListModel) {
+                        DefaultListModel<String> model = (DefaultListModel<String>) inputFileList.getModel();
+                        model.addElement(inputFileName);
+                    }
+                    else {
+                        DefaultListModel<String> model = new DefaultListModel<>();
+                        model.addElement(inputFileName);
+                        inputFileList.setModel(model);
+                    }
+                }
+
+
+            }
+        });
         exitItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

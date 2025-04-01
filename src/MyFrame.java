@@ -115,14 +115,14 @@ public class MyFrame extends JFrame {
     }
 
     private void setFileMenu() {
-        JMenuItem newItem = new JMenuItem("New");
+        //JMenuItem newItem = new JMenuItem("New");
         JMenuItem openItem = new JMenuItem("Open");
-        JMenuItem saveItem = new JMenuItem("Save");
+       // JMenuItem saveItem = new JMenuItem("Save");
         JMenuItem exitItem = new JMenuItem("Exit");
 
-        fileMenu.add(newItem);
+       // fileMenu.add(newItem);
         fileMenu.add(openItem);
-        fileMenu.add(saveItem);
+        //fileMenu.add(saveItem);
         fileMenu.add(exitItem);
         openItem.addActionListener(new ActionListener() {
             @Override
@@ -177,51 +177,6 @@ public class MyFrame extends JFrame {
             }
         }
     }
-
-    /*public void addConvertedJSONFileToList () throws FileNotFoundException {
-
-        if (!(inputFileList.getModel() instanceof DefaultListModel) || inputFileList.getSelectedValue() == null) {
-            JOptionPane.showMessageDialog(null, "Please select a file from the input list!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        String selectedFilePath = inputFileList.getSelectedValue().toString();
-        jparser = new JSON_Parser(selectedFilePath);
-
-
-        try {
-            jparser.writeSkillTree();
-
-            if (!(outputFileList.getModel() instanceof DefaultListModel)) {
-                outputFileList.setModel(new DefaultListModel<>());
-            }
-
-            DefaultListModel<String> outputModel = (DefaultListModel<String>) outputFileList.getModel();
-            outputModel.addElement(jparser.getOutputFileName()); // Store and display converted file path
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error converting file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    public void addConvertedPDFFileToList() throws FileNotFoundException {
-        if (!(inputFileList.getModel() instanceof DefaultListModel) || inputFileList.getSelectedValue() == null) {
-            JOptionPane.showMessageDialog(null, "Please select a file from the input list!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        String selectedFilePath = inputFileList.getSelectedValue().toString();
-        jparser = new JSON_Parser(selectedFilePath);
-        pdfParser= new PDF_Parser(jparser);
-
-        pdfParser.writePDF();
-
-        if (!(outputFileList.getModel() instanceof DefaultListModel)) {
-            outputFileList.setModel(new DefaultListModel<>());
-        }
-
-        DefaultListModel<String> outputModel = (DefaultListModel<String>) outputFileList.getModel();
-        outputModel.addElement(pdfParser.getOutputPDF()); // Store and display converted file path
-    }*/
 
     public void addConvertedJSONFileToList() throws FileNotFoundException {
         if (!(inputFileList.getModel() instanceof DefaultListModel) || inputFileList.getSelectedValuesList().isEmpty()) {

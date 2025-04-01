@@ -1,18 +1,9 @@
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JFileChooser;
-import javax.swing.DefaultListModel;
 import java.io.File;
+import java.io.IOException;
 
 
 public class MyFrame extends JFrame {
@@ -34,6 +25,9 @@ public class MyFrame extends JFrame {
     private String inputFileName;
     private String outputFileName;
     private JSON_Parser jparser;
+    private PDF_Parser pdfParser;
+
+    JFileChooser chooser;
 
 
     public MyFrame() {
@@ -55,26 +49,20 @@ public class MyFrame extends JFrame {
         AddFile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFileChooser chooser = new JFileChooser();
-                chooser.setDialogTitle("Select a JSON file");
-                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                int userSelection = chooser.showOpenDialog(null);
+                addFileToList ();
+            }
+        });
+        convertToJSON.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addConvertedJSONFileToList ();
+            }
+        });
 
-                if (userSelection == JFileChooser.APPROVE_OPTION) {
-                    inputFileName = chooser.getSelectedFile().getName();
-                    jparser = new JSON_Parser(inputFileName);
-                    if(inputFileList.getModel() instanceof DefaultListModel) {
-                        DefaultListModel<String> model = (DefaultListModel<String>) inputFileList.getModel();
-                        model.addElement(inputFileName);
-                    }
-                    else {
-                        DefaultListModel<String> model = new DefaultListModel<>();
-                        model.addElement(inputFileName);
-                        inputFileList.setModel(model);
-                    }
-                }
-
-
+        convertToPDF.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addConvertedPDFFileToList();
             }
         });
     }
@@ -108,26 +96,7 @@ public class MyFrame extends JFrame {
         openItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFileChooser chooser = new JFileChooser();
-                chooser.setDialogTitle("Select a JSON file");
-                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                int userSelection = chooser.showOpenDialog(null);
-
-                if (userSelection == JFileChooser.APPROVE_OPTION) {
-                    inputFileName = chooser.getSelectedFile().getName();
-                    jparser = new JSON_Parser(inputFileName);
-                    if(inputFileList.getModel() instanceof DefaultListModel) {
-                        DefaultListModel<String> model = (DefaultListModel<String>) inputFileList.getModel();
-                        model.addElement(inputFileName);
-                    }
-                    else {
-                        DefaultListModel<String> model = new DefaultListModel<>();
-                        model.addElement(inputFileName);
-                        inputFileList.setModel(model);
-                    }
-                }
-
-
+                addFileToList ();
             }
         });
         exitItem.addActionListener(new ActionListener() {
@@ -143,5 +112,73 @@ public class MyFrame extends JFrame {
         settingsMenu.add(preferencesItem);
     }
 
+    public void addFileToList ()
+    {
+        chooser = new JFileChooser();
+        chooser.setDialogTitle("Select a JSON file");
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int userSelection = chooser.showOpenDialog(null);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            inputFileName = chooser.getSelectedFile().getName();
+            jparser = new JSON_Parser(inputFileName);
+            if(inputFileList.getModel() instanceof DefaultListModel) {
+                DefaultListModel<String> model = (DefaultListModel<String>) inputFileList.getModel();
+                model.addElement(inputFileName);
+            }
+            else {
+                DefaultListModel<String> model = new DefaultListModel<>();
+                model.addElement(inputFileName);
+                inputFileList.setModel(model);
+            }
+        }
+    }
+
+    public void addConvertedJSONFileToList ()
+    {
+
+        if (!(inputFileList.getModel() instanceof DefaultListModel) || inputFileList.getSelectedValue() == null) {
+            JOptionPane.showMessageDialog(null, "Please select a file from the input list!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String selectedFilePath = inputFileList.getSelectedValue().toString();
+        jparser = new JSON_Parser(selectedFilePath);
+
+
+        try {
+            jparser.writeSkillTree();
+
+            if (!(outputFileList.getModel() instanceof DefaultListModel)) {
+                outputFileList.setModel(new DefaultListModel<>());
+            }
+
+            DefaultListModel<String> outputModel = (DefaultListModel<String>) outputFileList.getModel();
+            outputModel.addElement(jparser.getOutputFileName()); // Store and display converted file path
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error converting file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void addConvertedPDFFileToList()
+    {
+        if (!(inputFileList.getModel() instanceof DefaultListModel) || inputFileList.getSelectedValue() == null) {
+            JOptionPane.showMessageDialog(null, "Please select a file from the input list!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String selectedFilePath = inputFileList.getSelectedValue().toString();
+        jparser = new JSON_Parser(selectedFilePath);
+        pdfParser= new PDF_Parser(jparser);
+
+        pdfParser.writePDF();
+
+        if (!(outputFileList.getModel() instanceof DefaultListModel)) {
+            outputFileList.setModel(new DefaultListModel<>());
+        }
+
+        DefaultListModel<String> outputModel = (DefaultListModel<String>) outputFileList.getModel();
+        outputModel.addElement(pdfParser.getOutputPDF()); // Store and display converted file path
+    }
 
 }

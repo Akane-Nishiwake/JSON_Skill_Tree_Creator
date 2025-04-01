@@ -35,7 +35,7 @@ public class JSON_Parser {
     {
         mSkillTree = readSkillTree(mInputFileName);
         try {
-            writeSkillTree(mOutputFileName);
+            writeSkillTree();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -64,12 +64,12 @@ public class JSON_Parser {
         return skillTree;
     }
 
-    public void writeSkillTree(String filename) throws IOException {
+    public void writeSkillTree() throws IOException {
         //Create the object needed
 
         // Convert to JSON and write to a file
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        try (FileWriter writer = new FileWriter(filename)) {
+        try (FileWriter writer = new FileWriter(getOutputFileName())) {
             gson.toJson(mSkillTree, writer);
             System.out.println("Skill tree successfully written to ../OutputSkillTree.json.json");
         } catch (IOException e) {

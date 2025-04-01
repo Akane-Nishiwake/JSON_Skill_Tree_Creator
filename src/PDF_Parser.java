@@ -13,20 +13,19 @@ public class PDF_Parser {
 
     private String inputJson;
     private JSON_Parser jsonParser;
+    private String outputPDF;
     PDF_Parser(JSON_Parser jsonParser) {
         this.jsonParser = jsonParser;
-        String inputJson = this.jsonParser.getInputFileName(); // Input JSON file
-        String outputPdf = "Output"+ this.jsonParser.getInputFileWithoutExtension()+".pdf"; // Output PDF file
-
-        writePDF(inputJson, outputPdf);
+        outputPDF = "Output"+ jsonParser.getInputFileWithoutExtension()+".pdf";
     }
+    public String getOutputPDF() {return outputPDF;}
 
-    private static void writePDF(String inputJson, String outputPdf) {
+    public void writePDF() {
         try {
             // Read JSON file
             Gson gson = new Gson();
-
-            FileReader reader = new FileReader(inputJson);
+ // Output PDF file
+            FileReader reader = new FileReader(jsonParser.getInputFileName());
 
             JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
 
@@ -35,7 +34,7 @@ public class PDF_Parser {
 
             // Create PDF writer and document (iText 5 method)
             Document document = new Document();
-            PdfWriter.getInstance(document, new FileOutputStream(outputPdf));
+            PdfWriter.getInstance(document, new FileOutputStream(outputPDF));
             document.open();
 
             // Add Title
@@ -53,7 +52,7 @@ public class PDF_Parser {
 
             // Close document
             document.close();
-            System.out.println("PDF created successfully: " + outputPdf);
+            System.out.println("PDF created successfully: " + outputPDF);
 
         } catch (IOException | com.itextpdf.text.DocumentException e) {
             e.printStackTrace();

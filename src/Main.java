@@ -8,11 +8,8 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 constructGUI();
-    }
+            }
         });
-       JSON_Parser jParser = new JSON_Parser("SkillTree.json");
-       jParser.run();
-       PDF_Parser pParser = new PDF_Parser(jParser);
     }
 
     static void constructGUI() //this method creates a MyFrame object that calls the initialization of my JFrame

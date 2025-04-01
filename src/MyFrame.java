@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 
@@ -48,28 +49,33 @@ public class MyFrame extends JFrame {
         setMenuBar();
         AddFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                addFileAction();
-            }
-        });
-   /*     convertToPDF.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addFileToList ();
+                try {
+                    addFileToList();
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
         convertToJSON.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addConvertedJSONFileToList ();
+                try {
+                    addConvertedJSONFileToList ();
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
-
         convertToPDF.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addConvertedPDFFileToList();
+                try {
+                    addConvertedPDFFileToList();
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
-        });*/
+        });
     }
 
     private void setMenuBar() {
@@ -101,7 +107,11 @@ public class MyFrame extends JFrame {
         openItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addFileToList ();
+                try {
+                    addFileToList ();
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
         exitItem.addActionListener(new ActionListener() {
@@ -117,8 +127,7 @@ public class MyFrame extends JFrame {
         settingsMenu.add(preferencesItem);
     }
 
-    public void addFileToList ()
-    {
+    public void addFileToList () throws FileNotFoundException {
         chooser = new JFileChooser();
         chooser.setDialogTitle("Select a JSON file");
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -139,16 +148,15 @@ public class MyFrame extends JFrame {
         }
     }
 
-    public void addConvertedJSONFileToList ()
-    {
+    public void addConvertedJSONFileToList () throws FileNotFoundException {
 
         if (!(inputFileList.getModel() instanceof DefaultListModel) || inputFileList.getSelectedValue() == null) {
             JOptionPane.showMessageDialog(null, "Please select a file from the input list!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        //String selectedFilePath = inputFileList.getSelectedValue().toString();
-        //jparser = new JSON_Parser(selectedFilePath);
+        String selectedFilePath = inputFileList.getSelectedValue().toString();
+        jparser = new JSON_Parser(selectedFilePath);
 
 
         try {
@@ -165,15 +173,14 @@ public class MyFrame extends JFrame {
         }
     }
 
-    public void addConvertedPDFFileToList()
-    {
+    public void addConvertedPDFFileToList() throws FileNotFoundException {
         if (!(inputFileList.getModel() instanceof DefaultListModel) || inputFileList.getSelectedValue() == null) {
             JOptionPane.showMessageDialog(null, "Please select a file from the input list!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        //String selectedFilePath = inputFileList.getSelectedValue().toString();
-        //jparser = new JSON_Parser(selectedFilePath);
+        String selectedFilePath = inputFileList.getSelectedValue().toString();
+        jparser = new JSON_Parser(selectedFilePath);
         pdfParser= new PDF_Parser(jparser);
 
         pdfParser.writePDF();

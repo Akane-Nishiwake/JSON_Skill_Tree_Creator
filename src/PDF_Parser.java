@@ -24,7 +24,7 @@ public class PDF_Parser {
         try {
             // Read JSON file
             Gson gson = new Gson();
- // Output PDF file
+            // Output PDF file
             FileReader reader = new FileReader(jsonParser.getInputFileName());
 
             JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();

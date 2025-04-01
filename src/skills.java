@@ -1,6 +1,13 @@
 import java.util.ArrayList;
 import java.util.List;
 
+class SkillTreeWrapper {
+    SkillTree skill_tree; // This ensures the correct JSON format
+
+    public SkillTreeWrapper(SkillTree skillTree) {
+        this.skill_tree = skillTree;
+    }
+}
 class SkillTree {
     String name;
     List<SkillNode> nodes;
@@ -14,12 +21,12 @@ class SkillNode {
     String effect;
     List<String> prerequisites;
 
-    public <E> SkillNode(String number, String lunge, String s, int i, String s1, List<E> of) {
-        id = number;
-        name = lunge;
-        description = s;
-        cost = i;
-        effect = s1;
-        prerequisites = new ArrayList<>();
+    public SkillNode(String i, String nam, String des, int c, String ef, List<String> pre) {
+        id = i;
+        name = nam;
+        description = des;
+        cost = c;
+        effect = ef;
+        this.prerequisites = pre != null ? pre : new ArrayList<>();
     }
 }

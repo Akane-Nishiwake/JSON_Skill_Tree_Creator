@@ -11,10 +11,10 @@ public class JSON_Parser {
     private String mOutputFileName;
     private SkillTree mSkillTree;
 
-    JSON_Parser(String inputFileName) {
+    JSON_Parser(String inputFileName) throws FileNotFoundException {
         mInputFileName = inputFileName;
         mOutputFileName = "Output"+getInputFileName();
-        mSkillTree = new SkillTree();
+        mSkillTree = readSkillTree(mInputFileName);
     }
 
     public String getInputFileName() {
@@ -31,52 +31,40 @@ public class JSON_Parser {
         return mOutputFileName;
     }
 
-    public void run() throws IOException
-    {
-        mSkillTree = readSkillTree(mInputFileName);
-        try {
-            writeSkillTree();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
+    /**
+     * Method: readSkillTree
+     * This method takes in the filename of the file to be read
+     * and then reads in the file to the correct java object.
+     * The method uses the Gson object from the GSON library
+     * to make sure that the Java object is being made correctly
+     * with the correct Deserialization method.
+     */
     public SkillTree readSkillTree(String filename) throws FileNotFoundException {
+
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-        // Read JSON file
         Reader reader = new FileReader(filename);
-
-        // Parse JSON
         JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
-
-        // Deserialize the "skill_tree" object
         SkillTree skillTree = gson.fromJson(jsonObject.getAsJsonObject("skill_tree"), SkillTree.class);
-
-        // Print the skill tree
-        System.out.println("Skill Tree Name: " + skillTree.name);
-        for (SkillNode node : skillTree.nodes) {
-            System.out.println("Skill: " + node.name + " | Description: " + node.description +
-                    " | Cost: " + node.cost + " | Effect: " + node.effect +
-                    " | Prerequisites: " + node.prerequisites);
-        }
         return skillTree;
+
     }
 
+    /**
+     * Method: writeSkillTree
+     * This method reads in the data from the related Java object
+     * then writes it to a new file with the pre-determined
+     * file name.
+     */
     public void writeSkillTree() throws IOException {
-        //Create the object needed
-        mOutputFileName = "Output"+ filename;
         // Convert to JSON and write to a file
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        try (FileWriter writer = new FileWriter(getOutputFileName())) {
 
-            //////TODO THIS THING IS BROKEN LOL
-            gson.toJson(mSkillTree, writer);
-            System.out.println("Skill tree successfully written to ../"+mOutputFileName);
+        try (FileWriter writer = new FileWriter(getOutputFileName())) {
+            // Wrap mSkillTree inside SkillTreeWrapper
+            gson.toJson(new SkillTreeWrapper(mSkillTree), writer);
+            System.out.println("Skill tree successfully written to ../" + mOutputFileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return mOutputFileName;
     }
 }

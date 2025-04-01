@@ -66,16 +66,17 @@ public class JSON_Parser {
 
     public void writeSkillTree() throws IOException {
         //Create the object needed
-
+        mOutputFileName = "Output"+ filename;
         // Convert to JSON and write to a file
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try (FileWriter writer = new FileWriter(getOutputFileName())) {
 
             //////TODO THIS THING IS BROKEN LOL
             gson.toJson(mSkillTree, writer);
-            System.out.println("Skill tree successfully written to ../OutputSkillTree.json.json");
+            System.out.println("Skill tree successfully written to ../"+mOutputFileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return mOutputFileName;
     }
 }

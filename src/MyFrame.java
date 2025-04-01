@@ -47,6 +47,11 @@ public class MyFrame extends JFrame {
         setLocationRelativeTo(null);
         setMenuBar();
         AddFile.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addFileAction();
+            }
+        });
+   /*     convertToPDF.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 addFileToList ();
@@ -64,7 +69,7 @@ public class MyFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 addConvertedPDFFileToList();
             }
-        });
+        });*/
     }
 
     private void setMenuBar() {

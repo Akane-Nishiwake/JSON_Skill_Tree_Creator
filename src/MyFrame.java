@@ -50,7 +50,7 @@ public class MyFrame extends JFrame {
         AddFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    addFileToList();
+                    addFilesToList();
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -108,7 +108,7 @@ public class MyFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    addFileToList ();
+                    addFilesToList ();
                 } catch (FileNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -127,22 +127,29 @@ public class MyFrame extends JFrame {
         settingsMenu.add(preferencesItem);
     }
 
-    public void addFileToList () throws FileNotFoundException {
+    public void addFilesToList() throws FileNotFoundException {
         chooser = new JFileChooser();
-        chooser.setDialogTitle("Select a JSON file");
+        chooser.setDialogTitle("Select JSON files");
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.setMultiSelectionEnabled(true); // Enable multi-file selection
+
         int userSelection = chooser.showOpenDialog(null);
 
         if (userSelection == JFileChooser.APPROVE_OPTION) {
-            inputFileName = chooser.getSelectedFile().getName();
-            jparser = new JSON_Parser(inputFileName);
-            if(inputFileList.getModel() instanceof DefaultListModel) {
+            File[] selectedFiles = chooser.getSelectedFiles(); // Get multiple selected files
+
+            if (inputFileList.getModel() instanceof DefaultListModel) {
                 DefaultListModel<String> model = (DefaultListModel<String>) inputFileList.getModel();
-                model.addElement(inputFileName);
-            }
-            else {
+                for (File file : selectedFiles) {
+                    model.addElement(file.getName()); // Add each file to the list
+                    jparser = new JSON_Parser(file.getAbsolutePath()); // Process each file
+                }
+            } else {
                 DefaultListModel<String> model = new DefaultListModel<>();
-                model.addElement(inputFileName);
+                for (File file : selectedFiles) {
+                    model.addElement(file.getName());
+                    jparser = new JSON_Parser(file.getAbsolutePath());
+                }
                 inputFileList.setModel(model);
             }
         }

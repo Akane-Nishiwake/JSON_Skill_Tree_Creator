@@ -31,14 +31,6 @@ public class JSON_Parser {
         return mOutputFileName;
     }
 
-    /**
-     * Method: readSkillTree
-     * This method takes in the filename of the file to be read
-     * and then reads in the file to the correct java object.
-     * The method uses the Gson object from the GSON library
-     * to make sure that the Java object is being made correctly
-     * with the correct Deserialization method.
-     */
     public SkillTree readSkillTree(String filename) throws FileNotFoundException {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -49,12 +41,6 @@ public class JSON_Parser {
 
     }
 
-    /**
-     * Method: writeSkillTree
-     * This method reads in the data from the related Java object
-     * then writes it to a new file with the pre-determined
-     * file name.
-     */
     public void writeSkillTree() throws IOException {
         // Convert to JSON and write to a file
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -62,7 +48,7 @@ public class JSON_Parser {
         try (FileWriter writer = new FileWriter(getOutputFileName())) {
             // Wrap mSkillTree inside SkillTreeWrapper
             gson.toJson(new SkillTreeWrapper(mSkillTree), writer);
-            System.out.println("Skill tree successfully written to ../" + mOutputFileName);
+           // System.out.println("Skill tree successfully written to ../" + mOutputFileName);
         } catch (IOException e) {
             e.printStackTrace();
         }

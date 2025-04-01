@@ -52,7 +52,7 @@ public class PDF_Parser {
 
             // Close document
             document.close();
-            System.out.println("PDF created successfully: " + outputPDF);
+           // System.out.println("PDF created successfully: " + outputPDF);
 
         } catch (IOException | com.itextpdf.text.DocumentException e) {
             e.printStackTrace();

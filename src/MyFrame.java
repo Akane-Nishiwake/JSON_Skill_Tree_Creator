@@ -142,8 +142,8 @@ public class MyFrame extends JFrame {
             return;
         }
 
-        String selectedFilePath = inputFileList.getSelectedValue().toString();
-        jparser = new JSON_Parser(selectedFilePath);
+        //String selectedFilePath = inputFileList.getSelectedValue().toString();
+        //jparser = new JSON_Parser(selectedFilePath);
 
 
         try {
@@ -167,8 +167,8 @@ public class MyFrame extends JFrame {
             return;
         }
 
-        String selectedFilePath = inputFileList.getSelectedValue().toString();
-        jparser = new JSON_Parser(selectedFilePath);
+        //String selectedFilePath = inputFileList.getSelectedValue().toString();
+        //jparser = new JSON_Parser(selectedFilePath);
         pdfParser= new PDF_Parser(jparser);
 
         pdfParser.writePDF();

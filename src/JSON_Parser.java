@@ -70,6 +70,8 @@ public class JSON_Parser {
         // Convert to JSON and write to a file
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try (FileWriter writer = new FileWriter(getOutputFileName())) {
+
+            //////TODO THIS THING IS BROKEN LOL
             gson.toJson(mSkillTree, writer);
             System.out.println("Skill tree successfully written to ../OutputSkillTree.json.json");
         } catch (IOException e) {

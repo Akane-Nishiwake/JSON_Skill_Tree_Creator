@@ -1,25 +1,12 @@
 //Swing imports
-import javax.swing.JPanel;
-import javax.swing.JFrame;
-import javax.swing.JSplitPane;
-import javax.swing.JScrollPane;
-import javax.swing.JButton;
-import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JFileChooser;
-import javax.swing.DefaultListModel;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 //Action Imports
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 //File IO Imports
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,17 +33,20 @@ public class MyFrame extends JFrame {
     private JSON_Parser jparser;
     private ArrayList<JSON_Parser> jsonParserList;
     private PDF_Parser pdfParser;
-
     JFileChooser chooser;
+    private JTextArea previewTextArea;
+    private JButton previewButton;
+    private JScrollPane jscrollPanel;
 
 
     public MyFrame() {
         super();
-        jsonParserList = new ArrayList<>();
+
         init(); //calling the init on construction of the class.
     }
 
     private void init() {
+        jsonParserList = new ArrayList<>();
         createMainPanel();
     }
 
@@ -66,6 +56,8 @@ public class MyFrame extends JFrame {
         setContentPane(mainPanel);
         pack();
         setLocationRelativeTo(null);
+        previewTextArea.setEditable(false);
+        //JScrollPane scrollPane = new JScrollPane(previewTextArea);
         setMenuBar();
         AddFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -96,20 +88,28 @@ public class MyFrame extends JFrame {
                 }
             }
         });
+        previewButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updatePreview();
+            }
+        });
+
+
     }
 
     private void setMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
         settingsMenu = new JMenu("Settings");
-        previewMenu = new JMenu("Preview");
+       // previewMenu = new JMenu("Preview");
 
         setFileMenu();
         setSettingsMenu();
 
         menuBar.add(fileMenu);
         menuBar.add(settingsMenu);
-        menuBar.add(previewMenu);
+       // menuBar.add(previewMenu);
 
         this.setJMenuBar(menuBar);
     }
@@ -225,5 +225,28 @@ public class MyFrame extends JFrame {
         }
     }
 
+    private void updatePreview() {
+        if (outputFileList.getSelectedValue() == null) {
+            previewTextArea.setText("");
+            return;
+        }
+
+        String selectedFilePath = outputFileList.getSelectedValue().toString();
+        File file = new File(selectedFilePath);
+
+        if (!file.exists()) {
+            previewTextArea.setText("File not found.");
+            return;
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            previewTextArea.setText("");
+            String line;
+            while ((line = reader.readLine()) != null) {
+                previewTextArea.append(line + "\n");
+            }
+        } catch (IOException e) {
+            previewTextArea.setText("Error loading file.");
+        }
+    }
 
 }

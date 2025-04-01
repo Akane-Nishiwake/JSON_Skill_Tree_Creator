@@ -5,6 +5,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.Paragraph;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,7 +17,11 @@ public class PDF_Parser {
     private String outputPDF;
     PDF_Parser(JSON_Parser jsonParser) {
         this.jsonParser = jsonParser;
-        outputPDF = "Output"+ jsonParser.getInputFileWithoutExtension()+".pdf";
+        File outputDir = new File("Output_PDF");
+        if (!outputDir.exists()) {
+            outputDir.mkdirs();
+        }
+        outputPDF = "Output_PDF/"+"Output"+ jsonParser.getInputFileWithoutExtension()+".pdf";
     }
     public String getOutputPDF() {return outputPDF;}
 

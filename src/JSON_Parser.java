@@ -3,11 +3,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
-import java.io.IOException;
-import java.io.FileWriter;
+import java.io.*;
 
 public class JSON_Parser {
     private String mInputFileName;
@@ -16,6 +12,10 @@ public class JSON_Parser {
 
     JSON_Parser(String inputFileName) throws FileNotFoundException {
         mInputFileName = inputFileName;
+        File outputDir = new File("Output_JSON");
+        if (!outputDir.exists()) {
+            outputDir.mkdirs();
+        }
         mOutputFileName = "Output"+getInputFileName();
         mSkillTree = readSkillTree(mInputFileName);
     }

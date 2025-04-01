@@ -1,7 +1,22 @@
-import javax.swing.*;
-import java.awt.*;
+//Swing imports
+import javax.swing.JPanel;
+import javax.swing.JFrame;
+import javax.swing.JSplitPane;
+import javax.swing.JScrollPane;
+import javax.swing.JButton;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JFileChooser;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+
+//Action Imports
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+//File IO Imports
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

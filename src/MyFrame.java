@@ -2,13 +2,10 @@
 import javax.swing.*;
 
 //Action Imports
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 //File IO Imports
 import java.io.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,11 +25,7 @@ public class MyFrame extends JFrame {
     private JMenu fileMenu;
     private JMenu previewMenu;
     private JMenu settingsMenu;
-    private String inputFileName;
-    private String outputFileName;
     private JSON_Parser jparser;
-    private ArrayList<JSON_Parser> jsonParserList;
-    private PDF_Parser pdfParser;
     JFileChooser chooser;
     private JTextArea previewTextArea;
     private JButton previewButton;
@@ -46,7 +39,6 @@ public class MyFrame extends JFrame {
     }
 
     private void init() {
-        jsonParserList = new ArrayList<>();
         createMainPanel();
     }
 
@@ -57,43 +49,29 @@ public class MyFrame extends JFrame {
         pack();
         setLocationRelativeTo(null);
         previewTextArea.setEditable(false);
-        //JScrollPane scrollPane = new JScrollPane(previewTextArea);
         setMenuBar();
-        AddFile.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    addFilesToList();
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                }
+        AddFile.addActionListener(_ -> {
+            try {
+                addFilesToList();
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
             }
         });
-        convertToJSON.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    addConvertedJSONFileToList ();
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                }
+        convertToJSON.addActionListener(_ -> {
+            try {
+                addConvertedJSONFileToList ();
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
             }
         });
-        convertToPDF.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    addConvertedPDFFileToList();
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                }
+        convertToPDF.addActionListener(_ -> {
+            try {
+                addConvertedPDFFileToList();
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
             }
         });
-        previewButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updatePreview();
-            }
-        });
+        previewButton.addActionListener(_ -> updatePreview());
 
 
     }
@@ -102,14 +80,12 @@ public class MyFrame extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
         settingsMenu = new JMenu("Settings");
-       // previewMenu = new JMenu("Preview");
 
         setFileMenu();
         setSettingsMenu();
 
         menuBar.add(fileMenu);
         menuBar.add(settingsMenu);
-       // menuBar.add(previewMenu);
 
         this.setJMenuBar(menuBar);
     }
@@ -124,22 +100,14 @@ public class MyFrame extends JFrame {
         fileMenu.add(openItem);
         //fileMenu.add(saveItem);
         fileMenu.add(exitItem);
-        openItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    addFilesToList ();
-                } catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                }
+        openItem.addActionListener(_ -> {
+            try {
+                addFilesToList ();
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
             }
         });
-        exitItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
+        exitItem.addActionListener(_ -> System.exit(0));
     }
 
     private void setSettingsMenu() {
@@ -147,7 +115,7 @@ public class MyFrame extends JFrame {
         settingsMenu.add(preferencesItem);
     }
 
-    public void addFilesToList() throws FileNotFoundException {
+    private void addFilesToList() throws FileNotFoundException {
         chooser = new JFileChooser();
         chooser.setDialogTitle("Select JSON files");
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -163,7 +131,6 @@ public class MyFrame extends JFrame {
                 for (File file : selectedFiles) {
                     model.addElement(file.getName()); // Add each file to the list
                     jparser = new JSON_Parser(file.getAbsolutePath()); // Process each file
-                    jsonParserList.add(jparser);
                 }
             }
             else {
@@ -171,25 +138,25 @@ public class MyFrame extends JFrame {
                 for (File file : selectedFiles) {
                     model.addElement(file.getName());
                     jparser = new JSON_Parser(file.getAbsolutePath());
-                    jsonParserList.add(jparser);
                 }
                 inputFileList.setModel(model);
             }
         }
     }
-
-    public void addConvertedJSONFileToList() throws FileNotFoundException {
+    private void utilityFileHelper()
+    {
         if (!(inputFileList.getModel() instanceof DefaultListModel) || inputFileList.getSelectedValuesList().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please select one or more files from the input list!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        List<String> selectedFilePaths = inputFileList.getSelectedValuesList();
-
         if (!(outputFileList.getModel() instanceof DefaultListModel)) {
             outputFileList.setModel(new DefaultListModel<>());
         }
+    }
 
+    private void addConvertedJSONFileToList() throws FileNotFoundException {
+        utilityFileHelper();
+        List<String> selectedFilePaths = inputFileList.getSelectedValuesList();
         DefaultListModel<String> outputModel = (DefaultListModel<String>) outputFileList.getModel();
 
         for (String selectedFilePath : selectedFilePaths) {
@@ -203,23 +170,14 @@ public class MyFrame extends JFrame {
         }
     }
 
-    public void addConvertedPDFFileToList() throws FileNotFoundException {
-        if (!(inputFileList.getModel() instanceof DefaultListModel) || inputFileList.getSelectedValuesList().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please select one or more files from the input list!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
+    private void addConvertedPDFFileToList() throws FileNotFoundException {
+        utilityFileHelper();
         List<String> selectedFilePaths = inputFileList.getSelectedValuesList();
-
-        if (!(outputFileList.getModel() instanceof DefaultListModel)) {
-            outputFileList.setModel(new DefaultListModel<>());
-        }
-
         DefaultListModel<String> outputModel = (DefaultListModel<String>) outputFileList.getModel();
 
         for (String selectedFilePath : selectedFilePaths) {
             jparser = new JSON_Parser(selectedFilePath);
-            pdfParser = new PDF_Parser(jparser);
+            PDF_Parser pdfParser = new PDF_Parser(jparser);
             pdfParser.writePDF();
             outputModel.addElement(pdfParser.getOutputPDF()); // Store and display converted file path
         }

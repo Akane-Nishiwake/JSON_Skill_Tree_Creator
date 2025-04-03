@@ -12,13 +12,14 @@ import java.io.IOException;
 
 public class PDF_Parser {
 
-    private String inputJson;
-    private JSON_Parser jsonParser;
-    private String outputPDF;
+   // private String inputJson;
+    private final JSON_Parser jsonParser;
+    private final String outputPDF;
     PDF_Parser(JSON_Parser jsonParser) {
         this.jsonParser = jsonParser;
         File outputDir = new File("Output_PDF");
         if (!outputDir.exists()) {
+            //noinspection ResultOfMethodCallIgnored
             outputDir.mkdirs();
         }
         outputPDF = "Output_PDF/"+"Output"+ jsonParser.getInputFileWithoutExtension()+".pdf";
@@ -48,6 +49,7 @@ public class PDF_Parser {
             // Add Skill Nodes
             for (SkillNode node : skillTree.nodes) {
                 document.add(new Paragraph("Skill: " + node.name));
+                document.add(new Paragraph("ID: " + node.id));
                 document.add(new Paragraph("Description: " + node.description));
                 document.add(new Paragraph("Cost: " + node.cost));
                 document.add(new Paragraph("Effect: " + node.effect));
@@ -59,8 +61,8 @@ public class PDF_Parser {
             document.close();
            // System.out.println("PDF created successfully: " + outputPDF);
 
-        } catch (IOException | com.itextpdf.text.DocumentException e) {
-            e.printStackTrace();
+        } catch (IOException | com.itextpdf.text.DocumentException _) {
+
         }
     }
 }

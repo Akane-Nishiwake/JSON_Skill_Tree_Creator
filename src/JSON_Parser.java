@@ -6,14 +6,15 @@ import com.google.gson.JsonParser;
 import java.io.*;
 
 public class JSON_Parser {
-    private String mInputFileName;
-    private String mOutputFileName;
-    private SkillTree mSkillTree;
+    private final String mInputFileName;
+    private final String mOutputFileName;
+    private final SkillTree mSkillTree;
 
     JSON_Parser(String inputFileName) throws FileNotFoundException {
         mInputFileName = inputFileName;
         File outputDir = new File("Output_JSON");
         if (!outputDir.exists()) {
+            //noinspection ResultOfMethodCallIgnored
             outputDir.mkdirs();
         }
         mOutputFileName = "Output"+getInputFileName();
@@ -39,21 +40,15 @@ public class JSON_Parser {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Reader reader = new FileReader(filename);
         JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
-        SkillTree skillTree = gson.fromJson(jsonObject.getAsJsonObject("skill_tree"), SkillTree.class);
-        return skillTree;
+        return gson.fromJson(jsonObject.getAsJsonObject("skill_tree"), SkillTree.class);
 
     }
 
     public void writeSkillTree() throws IOException {
-        // Convert to JSON and write to a file
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
         try (FileWriter writer = new FileWriter(getOutputFileName())) {
-            // Wrap mSkillTree inside SkillTreeWrapper
             gson.toJson(new SkillTreeWrapper(mSkillTree), writer);
-           // System.out.println("Skill tree successfully written to ../" + mOutputFileName);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException _) {
         }
     }
 }

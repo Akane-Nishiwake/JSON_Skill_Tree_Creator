@@ -8,7 +8,7 @@ class SkillTreeWrapper {
         this.skill_tree = skillTree;
     }
 }
-class SkillTree {
+public class SkillTree {
     String name;
     List<SkillNode> nodes;
 }

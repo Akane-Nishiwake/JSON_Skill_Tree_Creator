@@ -17,7 +17,7 @@ public class JSON_Parser {
             //noinspection ResultOfMethodCallIgnored
             outputDir.mkdirs();
         }
-        mOutputFileName = "Output"+getInputFileName();
+        mOutputFileName = "Output_JSON/Output"+getInputFileName();
         mSkillTree = readSkillTree(mInputFileName);
     }
 

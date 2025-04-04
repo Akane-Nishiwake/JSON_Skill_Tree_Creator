@@ -18,29 +18,22 @@ public class MyFrame extends JFrame {
     private JButton convertToJSON;
     private JButton convertToPDF;
     private JPanel utilityOptionsPanel;
-    private JList inputFileList;
-    private JList outputFileList;
+    private JList<String> inputFileList;
+    private JList<String> outputFileList;
     private JButton AddFile;
     private JPanel actionButtonPanel;
     private JMenu fileMenu;
     private JMenu previewMenu;
     private JMenu settingsMenu;
-    private JSON_Parser jparser;
+    private JSON_Parser jsonParser;
     JFileChooser chooser;
     private JTextArea previewTextArea;
     private JButton previewButton;
-    private JScrollPane jscrollPanel;
+    private JScrollPane jScrollPane;
 
+    public MyFrame() { super(); init(); }
 
-    public MyFrame() {
-        super();
-
-        init(); //calling the init on construction of the class.
-    }
-
-    private void init() {
-        createMainPanel();
-    }
+    private void init() { createMainPanel(); }
 
     private void createMainPanel() {
         setTitle("Skill Tree Creator");
@@ -72,8 +65,6 @@ public class MyFrame extends JFrame {
             }
         });
         previewButton.addActionListener(_ -> updatePreview());
-
-
     }
 
     private void setMenuBar() {
@@ -91,14 +82,10 @@ public class MyFrame extends JFrame {
     }
 
     private void setFileMenu() {
-        //JMenuItem newItem = new JMenuItem("New");
         JMenuItem openItem = new JMenuItem("Open");
-       // JMenuItem saveItem = new JMenuItem("Save");
         JMenuItem exitItem = new JMenuItem("Exit");
 
-       // fileMenu.add(newItem);
         fileMenu.add(openItem);
-        //fileMenu.add(saveItem);
         fileMenu.add(exitItem);
         openItem.addActionListener(_ -> {
             try {
@@ -126,18 +113,17 @@ public class MyFrame extends JFrame {
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             File[] selectedFiles = chooser.getSelectedFiles(); // Get multiple selected files
 
-            if (inputFileList.getModel() instanceof DefaultListModel) {
-                DefaultListModel<String> model = (DefaultListModel<String>) inputFileList.getModel();
+            if (inputFileList.getModel() instanceof DefaultListModel<String> model) {
                 for (File file : selectedFiles) {
                     model.addElement(file.getName()); // Add each file to the list
-                    jparser = new JSON_Parser(file.getAbsolutePath()); // Process each file
+                    jsonParser = new JSON_Parser(file.getAbsolutePath()); // Process each file
                 }
             }
             else {
                 DefaultListModel<String> model = new DefaultListModel<>();
                 for (File file : selectedFiles) {
                     model.addElement(file.getName());
-                    jparser = new JSON_Parser(file.getAbsolutePath());
+                    jsonParser = new JSON_Parser(file.getAbsolutePath());
                 }
                 inputFileList.setModel(model);
             }
@@ -160,10 +146,10 @@ public class MyFrame extends JFrame {
         DefaultListModel<String> outputModel = (DefaultListModel<String>) outputFileList.getModel();
 
         for (String selectedFilePath : selectedFilePaths) {
-            jparser = new JSON_Parser(selectedFilePath);
+            jsonParser = new JSON_Parser(selectedFilePath);
             try {
-                jparser.writeSkillTree();
-                outputModel.addElement(jparser.getOutputFileName()); // Store and display converted file path
+                jsonParser.writeSkillTree();
+                outputModel.addElement(jsonParser.getOutputFileName()); // Store and display converted file path
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Error converting file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -176,8 +162,8 @@ public class MyFrame extends JFrame {
         DefaultListModel<String> outputModel = (DefaultListModel<String>) outputFileList.getModel();
 
         for (String selectedFilePath : selectedFilePaths) {
-            jparser = new JSON_Parser(selectedFilePath);
-            PDF_Parser pdfParser = new PDF_Parser(jparser);
+            jsonParser = new JSON_Parser(selectedFilePath);
+            PDF_Parser pdfParser = new PDF_Parser(jsonParser);
             pdfParser.writePDF();
             outputModel.addElement(pdfParser.getOutputPDF()); // Store and display converted file path
         }
@@ -189,7 +175,7 @@ public class MyFrame extends JFrame {
             return;
         }
 
-        String selectedFilePath = outputFileList.getSelectedValue().toString();
+        String selectedFilePath = outputFileList.getSelectedValue();
         File file = new File(selectedFilePath);
 
         if (!file.exists()) {

@@ -10,5 +10,6 @@
     <orderEntry type="library" exported="" name="gson-2.12.1" level="project" />
     <orderEntry type="library" exported="" name="itextpdf-5.3.5" level="project" />
     <orderEntry type="library" name="itextpdf-5.5.13.4" level="project" />
+    <orderEntry type="library" name="lib" level="project" />
   </component>
 </module>

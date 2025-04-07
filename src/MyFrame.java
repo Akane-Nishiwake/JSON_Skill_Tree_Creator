@@ -4,6 +4,7 @@ import javax.swing.*;
 //Action Imports
 
 //File IO Imports
+import java.awt.*;
 import java.io.*;
 
 import java.util.List;
@@ -26,10 +27,10 @@ public class MyFrame extends JFrame {
     private JMenu previewMenu;
     private JMenu settingsMenu;
     private JSON_Parser jsonParser;
-    JFileChooser chooser;
-    private JTextArea previewTextArea;
+    //private JTextArea previewTextArea;
     private JButton previewButton;
     private JScrollPane jScrollPane;
+    private JPanel diagramPreview;
 
     public MyFrame() { super(); init(); }
 
@@ -41,7 +42,7 @@ public class MyFrame extends JFrame {
         setContentPane(mainPanel);
         pack();
         setLocationRelativeTo(null);
-        previewTextArea.setEditable(false);
+        //previewTextArea.setEditable(false);
         setMenuBar();
         AddFile.addActionListener(_ -> {
             try {
@@ -103,7 +104,7 @@ public class MyFrame extends JFrame {
     }
 
     private void addFilesToList() throws FileNotFoundException {
-        chooser = new JFileChooser();
+        JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Select JSON files");
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setMultiSelectionEnabled(true); // Enable multi-file selection
@@ -170,26 +171,22 @@ public class MyFrame extends JFrame {
     }
 
     private void updatePreview() {
-        if (outputFileList.getSelectedValue() == null) {
-            previewTextArea.setText("");
-            return;
-        }
+        try{
+            if (inputFileList.getSelectedValue() == null) return;
 
-        String selectedFilePath = outputFileList.getSelectedValue();
-        File file = new File(selectedFilePath);
+            String selectedFilePath = inputFileList.getSelectedValue();
+            JSON_Parser parser = new JSON_Parser(selectedFilePath);
+            SkillTree skillTree = parser.readSkillTree(selectedFilePath);
 
-        if (!file.exists()) {
-            previewTextArea.setText("File not found.");
-            return;
+            MermaidRender renderer = new MermaidRender(skillTree);
+            diagramPreview.removeAll();
+            diagramPreview.setLayout(new BorderLayout());
+            diagramPreview.add(renderer.getJfxPanel(), BorderLayout.CENTER);
+            diagramPreview.revalidate();
         }
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            previewTextArea.setText("");
-            String line;
-            while ((line = reader.readLine()) != null) {
-                previewTextArea.append(line + "\n");
-            }
-        } catch (IOException e) {
-            previewTextArea.setText("Error loading file.");
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(null, "Error updating diagram preview!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

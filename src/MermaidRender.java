@@ -12,7 +12,7 @@ public class MermaidRender {
     public MermaidRender(SkillTree skillTree) {
         this.skillTree = skillTree;
         jfxPanel = new JFXPanel();
-
+        diagramRender();
     }
 
     public JFXPanel getJfxPanel() {

@@ -1,17 +1,14 @@
-//Swing imports
+
 import javax.swing.*;
 
-//Action Imports
-
-//File IO Imports
 import java.awt.*;
 import java.io.*;
 
 import java.util.List;
 
-
+/** MyFrame - Main application window for the Skill Tree Creator */
 public class MyFrame extends JFrame {
-
+    // UI Components
     private JPanel mainPanel;
     private JSplitPane splitPane;
     private JScrollPane scrollLeftPane;
@@ -24,25 +21,36 @@ public class MyFrame extends JFrame {
     private JButton AddFile;
     private JPanel actionButtonPanel;
     private JMenu fileMenu;
-    private JMenu previewMenu;
     private JMenu settingsMenu;
     private JSON_Parser jsonParser;
-    //private JTextArea previewTextArea;
     private JButton previewButton;
     private JScrollPane jScrollPane;
     private JPanel diagramPreview;
 
-    public MyFrame() { super(); init(); }
+    /** Constructor
+     * Creates a new MyFrame instance and initializes the UI
+     */
+    public MyFrame() {
+        super();
+        init();
+    }
 
-    private void init() { createMainPanel(); }
+    /** Initialize frame
+     * Calls method to create main panel
+     */
+    private void init() {
+        createMainPanel();
+    }
 
+    /** Create main panel
+     * Sets up the main window, components and event listeners
+     */
     private void createMainPanel() {
         setTitle("Skill Tree Creator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setContentPane(mainPanel);
         pack();
         setLocationRelativeTo(null);
-        //previewTextArea.setEditable(false);
         setMenuBar();
         AddFile.addActionListener(_ -> {
             try {
@@ -53,7 +61,7 @@ public class MyFrame extends JFrame {
         });
         convertToJSON.addActionListener(_ -> {
             try {
-                addConvertedJSONFileToList ();
+                addConvertedJSONFileToList();
             } catch (FileNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
@@ -68,6 +76,9 @@ public class MyFrame extends JFrame {
         previewButton.addActionListener(_ -> updatePreview());
     }
 
+    /** Set up menu bar
+     * Creates and configures the main menu bar
+     */
     private void setMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         fileMenu = new JMenu("File");
@@ -82,6 +93,9 @@ public class MyFrame extends JFrame {
         this.setJMenuBar(menuBar);
     }
 
+    /** Configure file menu
+     * Sets up file menu items and their actions
+     */
     private void setFileMenu() {
         JMenuItem openItem = new JMenuItem("Open");
         JMenuItem exitItem = new JMenuItem("Exit");
@@ -90,7 +104,7 @@ public class MyFrame extends JFrame {
         fileMenu.add(exitItem);
         openItem.addActionListener(_ -> {
             try {
-                addFilesToList ();
+                addFilesToList();
             } catch (FileNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
@@ -98,29 +112,33 @@ public class MyFrame extends JFrame {
         exitItem.addActionListener(_ -> System.exit(0));
     }
 
+    /** Configure settings menu
+     * Sets up settings menu items
+     */
     private void setSettingsMenu() {
         JMenuItem preferencesItem = new JMenuItem("Preferences");
         settingsMenu.add(preferencesItem);
     }
 
+    /** Add files to input list
+     * Opens file chooser and adds selected JSON files to input list
+     * @throws FileNotFoundException if selected file cannot be found
+     */
     private void addFilesToList() throws FileNotFoundException {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Select JSON files");
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        chooser.setMultiSelectionEnabled(true); // Enable multi-file selection
+        chooser.setMultiSelectionEnabled(true);
 
-        int userSelection = chooser.showOpenDialog(null);
-
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File[] selectedFiles = chooser.getSelectedFiles(); // Get multiple selected files
+        if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            File[] selectedFiles = chooser.getSelectedFiles();
 
             if (inputFileList.getModel() instanceof DefaultListModel<String> model) {
                 for (File file : selectedFiles) {
-                    model.addElement(file.getName()); // Add each file to the list
-                    jsonParser = new JSON_Parser(file.getAbsolutePath()); // Process each file
+                    model.addElement(file.getName());
+                    jsonParser = new JSON_Parser(file.getAbsolutePath());
                 }
-            }
-            else {
+            } else {
                 DefaultListModel<String> model = new DefaultListModel<>();
                 for (File file : selectedFiles) {
                     model.addElement(file.getName());
@@ -130,8 +148,11 @@ public class MyFrame extends JFrame {
             }
         }
     }
-    private void utilityFileHelper()
-    {
+
+    /** Utility helper
+     * Validates input selection and initializes output list model
+     */
+    private void utilityFileHelper() {
         if (!(inputFileList.getModel() instanceof DefaultListModel) || inputFileList.getSelectedValuesList().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please select one or more files from the input list!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -141,6 +162,10 @@ public class MyFrame extends JFrame {
         }
     }
 
+    /** Convert to JSON
+     * Converts selected files to JSON format and adds to output list
+     * @throws FileNotFoundException if input file cannot be found
+     */
     private void addConvertedJSONFileToList() throws FileNotFoundException {
         utilityFileHelper();
         List<String> selectedFilePaths = inputFileList.getSelectedValuesList();
@@ -150,13 +175,17 @@ public class MyFrame extends JFrame {
             jsonParser = new JSON_Parser(selectedFilePath);
             try {
                 jsonParser.writeSkillTree();
-                outputModel.addElement(jsonParser.getOutputFileName()); // Store and display converted file path
+                outputModel.addElement(jsonParser.getOutputFileName());
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Error converting file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
+    /** Convert to PDF
+     * Converts selected files to PDF format and adds to output list
+     * @throws FileNotFoundException if input file cannot be found
+     */
     private void addConvertedPDFFileToList() throws FileNotFoundException {
         utilityFileHelper();
         List<String> selectedFilePaths = inputFileList.getSelectedValuesList();
@@ -166,12 +195,15 @@ public class MyFrame extends JFrame {
             jsonParser = new JSON_Parser(selectedFilePath);
             PDF_Parser pdfParser = new PDF_Parser(jsonParser);
             pdfParser.writePDF();
-            outputModel.addElement(pdfParser.getOutputPDF()); // Store and display converted file path
+            outputModel.addElement(pdfParser.getOutputPDF());
         }
     }
 
+    /** Update preview
+     * Updates the diagram preview with the selected skill tree
+     */
     private void updatePreview() {
-        try{
+        try {
             if (inputFileList.getSelectedValue() == null) return;
 
             String selectedFilePath = inputFileList.getSelectedValue();
@@ -183,11 +215,8 @@ public class MyFrame extends JFrame {
             diagramPreview.setLayout(new BorderLayout());
             diagramPreview.add(renderer.getJfxPanel(), BorderLayout.CENTER);
             diagramPreview.revalidate();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error updating diagram preview!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
 }

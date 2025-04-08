@@ -10,11 +10,15 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
+/** PDF_Parser - Converts skill tree data to PDF format */
 public class PDF_Parser {
-
-   // private String inputJson;
     private final JSON_Parser jsonParser;
     private final String outputPDF;
+
+    /** Constructor
+     * @param jsonParser JSON_Parser instance containing skill tree data
+     * Creates output directory and sets up PDF output path
+     */
     PDF_Parser(JSON_Parser jsonParser) {
         this.jsonParser = jsonParser;
         File outputDir = new File("Output_PDF");
@@ -22,23 +26,31 @@ public class PDF_Parser {
             //noinspection ResultOfMethodCallIgnored
             outputDir.mkdirs();
         }
-        outputPDF = "Output_PDF/"+"Output"+ jsonParser.getInputFileWithoutExtension()+".pdf";
+        outputPDF = "Output_PDF/" + "Output" + jsonParser.getInputFileWithoutExtension() + ".pdf";
     }
-    public String getOutputPDF() {return outputPDF;}
 
+    /** Get output PDF path
+     * @return String containing the output PDF file path
+     */
+    public String getOutputPDF() {
+        return outputPDF;
+    }
+
+    /** Write skill tree to PDF
+     * Reads JSON data and creates a formatted PDF document with skill tree information
+     * Handles JSON parsing, PDF creation and writing skill node details
+     */
     public void writePDF() {
         try {
             // Read JSON file
             Gson gson = new Gson();
-            // Output PDF file
             FileReader reader = new FileReader(jsonParser.getInputFileName());
-
             JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
 
             // Deserialize JSON into SkillTree object
             SkillTree skillTree = gson.fromJson(jsonObject.getAsJsonObject("skill_tree"), SkillTree.class);
 
-            // Create PDF writer and document (iText 5 method)
+            // Create PDF writer and document
             Document document = new Document();
             PdfWriter.getInstance(document, new FileOutputStream(outputPDF));
             document.open();
@@ -57,12 +69,9 @@ public class PDF_Parser {
                 document.add(new Paragraph("--------------------------------------------------------"));
             }
 
-            // Close document
             document.close();
-           // System.out.println("PDF created successfully: " + outputPDF);
 
         } catch (IOException | com.itextpdf.text.DocumentException _) {
-
         }
     }
 }

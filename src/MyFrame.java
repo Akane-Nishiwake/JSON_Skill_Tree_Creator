@@ -1,7 +1,10 @@
 
+import javafx.scene.image.WritableImage;
+
 import javax.swing.*;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 
 import java.util.List;
@@ -187,15 +190,45 @@ public class MyFrame extends JFrame {
      * @throws FileNotFoundException if input file cannot be found
      */
     private void addConvertedPDFFileToList() throws FileNotFoundException {
+//        utilityFileHelper();
+//        List<String> selectedFilePaths = inputFileList.getSelectedValuesList();
+//        DefaultListModel<String> outputModel = (DefaultListModel<String>) outputFileList.getModel();
+//
+//        for (String selectedFilePath : selectedFilePaths) {
+//            jsonParser = new JSON_Parser(selectedFilePath);
+//            PDF_Parser pdfParser = new PDF_Parser(jsonParser);
+//            pdfParser.writePDF();
+//            outputModel.addElement(pdfParser.getOutputPDF());
+//        }
         utilityFileHelper();
         List<String> selectedFilePaths = inputFileList.getSelectedValuesList();
         DefaultListModel<String> outputModel = (DefaultListModel<String>) outputFileList.getModel();
 
         for (String selectedFilePath : selectedFilePaths) {
-            jsonParser = new JSON_Parser(selectedFilePath);
-            PDF_Parser pdfParser = new PDF_Parser(jsonParser);
-            pdfParser.writePDF();
-            outputModel.addElement(pdfParser.getOutputPDF());
+            try {
+                jsonParser = new JSON_Parser(selectedFilePath);
+                SkillTree skillTree = jsonParser.readSkillTree(selectedFilePath);
+
+                // Create renderer and wait for initialization
+                MermaidRender renderer = new MermaidRender(skillTree);
+                Thread.sleep(1000); // Give time for JavaFX initialization
+
+                // Get diagram snapshot
+                WritableImage snapshot = renderer.takeSnapshot();
+                if (snapshot != null) {
+                    BufferedImage diagram = MermaidRender.convertToBufferedImage(snapshot);
+                    PDF_Parser pdfParser = new PDF_Parser(jsonParser);
+                    pdfParser.writePDF(diagram);
+                    outputModel.addElement(pdfParser.getOutputPDF());
+                } else {
+                    throw new RuntimeException("Failed to capture diagram");
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                JOptionPane.showMessageDialog(this, "PDF conversion interrupted", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error converting to PDF: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 

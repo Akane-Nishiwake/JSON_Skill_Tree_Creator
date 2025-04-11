@@ -8,7 +8,10 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -31,7 +34,8 @@ public class MermaidRender
      * @param skillTree The SkillTree object to render
      *                  Creates a new MermaidRender instance and starts diagram rendering
      */
-    public MermaidRender(SkillTree skillTree) {
+    public MermaidRender(SkillTree skillTree)
+    {
         this.skillTree = skillTree;
         this.jfxPanel = new JFXPanel();
         Platform.runLater(this::diagramRender);
@@ -42,7 +46,8 @@ public class MermaidRender
      *
      * @return JFXPanel component for embedding in Swing
      */
-    public JFXPanel getJfxPanel() {
+    public JFXPanel getJfxPanel()
+    {
         return jfxPanel;
     }
 
@@ -50,7 +55,8 @@ public class MermaidRender
      * Render diagram
      * Creates a WebView to display the Mermaid diagram and adds it to the JFXPanel
      */
-    private void diagramRender() {
+    private void diagramRender()
+    {
         webView = new WebView();
         Scene scene = new Scene(webView);
         jfxPanel.setScene(scene);
@@ -59,27 +65,29 @@ public class MermaidRender
         String html = generateHtml(mermaidDefinition);
 
         webView.getEngine().loadContent(html);
-        webView.getEngine().getLoadWorker().stateProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    if (newValue == Worker.State.SUCCEEDED) {
-                        contentLoaded = true;
-                    }
-                }
-        );
+        webView.getEngine().getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) ->
+                                                                        {
+                                                                            if (newValue == Worker.State.SUCCEEDED)
+                                                                            {
+                                                                                contentLoaded = true;
+                                                                            }
+                                                                        });
 
     }
-    private String generateHtml(String mermaidDefinition) {
-        return "<html>" +
-                "<head>" +
-                "<script type=\"text/javascript\" src=\"https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js\"></script>" +
-                "<script type=\"text/javascript\">" +
-                "mermaid.initialize({startOnLoad:true});" +
-                "</script>" +
-                "</head>" +
-                "<body>" +
-                "<div class=\"mermaid\">" + mermaidDefinition + "</div>" +
-                "</body>" +
-                "</html>";
+
+    /**
+     * Generate HTML for Mermaid diagram
+     *
+     * @param mermaidDefinition The Mermaid diagram definition
+     * @return String containing the HTML content
+     */
+    private String generateHtml(String mermaidDefinition)
+    {
+        return "<html>" + "<head>" +
+               "<script type=\"text/javascript\" src=\"https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min" +
+               ".js\"></script>" +
+               "<script type=\"text/javascript\">" + "mermaid.initialize({startOnLoad:true});" + "</script>" +
+               "</head>" + "<body>" + "<div class=\"mermaid\">" + mermaidDefinition + "</div>" + "</body>" + "</html>";
     }
 
     /**
@@ -88,11 +96,14 @@ public class MermaidRender
      * @return String containing the Mermaid diagram definition
      * Constructs diagram by iterating through skill tree nodes and their prerequisites
      */
-    private String buildMermaidDiagram() {
+    private String buildMermaidDiagram()
+    {
         StringBuilder sb = new StringBuilder("graph TD\n");
-        for (SkillNode node : skillTree.nodes) {
+        for (SkillNode node : skillTree.nodes)
+        {
             sb.append(node.id).append("[\"").append(node.name).append("\"]\n");
-            for (String prereq : node.prerequisites) {
+            for (String prereq : node.prerequisites)
+            {
                 sb.append(prereq).append(" --> ").append(node.id).append("\n");
             }
         }
@@ -104,42 +115,58 @@ public class MermaidRender
      *
      * @return WritableImage containing the diagram snapshot
      */
-    public WritableImage takeSnapshot() {
+    public WritableImage takeSnapshot()
+    {
         CountDownLatch latch = new CountDownLatch(1);
         AtomicReference<WritableImage> image = new AtomicReference<>();
 
-        Platform.runLater(() -> {
-            // Wait for content to load
-            while (!contentLoaded) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    return;
-                }
-            }
+        Platform.runLater(() ->
+                          {
+                              // Wait for content to load
+                              while (!contentLoaded)
+                              {
+                                  try
+                                  {
+                                      Thread.sleep(100);
+                                  }
+                                  catch (InterruptedException e)
+                                  {
+                                      Thread.currentThread().interrupt();
+                                      return;
+                                  }
+                              }
 
-            // Additional wait for rendering
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                return;
-            }
+                              // Additional wait for rendering
+                              try
+                              {
+                                  Thread.sleep(500);
+                              }
+                              catch (InterruptedException e)
+                              {
+                                  Thread.currentThread().interrupt();
+                                  return;
+                              }
 
-            if (webView != null) {
-                image.set(webView.snapshot(null, null));
-            }
-            latch.countDown();
-        });
+                              if (webView != null)
+                              {
+                                  image.set(webView.snapshot(null, null));
+                              }
+                              latch.countDown();
+                          });
 
-        try {
-            if (!latch.await(5, TimeUnit.SECONDS)) {
+        try
+        {
+            if (!latch.await(5, TimeUnit.SECONDS))
+            {
                 throw new TimeoutException("Snapshot timed out");
             }
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e)
+        {
             Thread.currentThread().interrupt();
-        } catch (TimeoutException e) {
+        }
+        catch (TimeoutException e)
+        {
             e.printStackTrace();
         }
 
@@ -149,20 +176,47 @@ public class MermaidRender
 
     /**
      * Convert WritableImage to BufferedImage
+     *
      * @param writableImage JavaFX image to convert
      * @return BufferedImage for use with PDF generation
      */
-    public static BufferedImage convertToBufferedImage(WritableImage writableImage) {
+    public static BufferedImage convertToBufferedImage(WritableImage writableImage)
+    {
         int width = (int) writableImage.getWidth();
         int height = (int) writableImage.getHeight();
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         PixelReader pixelReader = writableImage.getPixelReader();
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
                 bufferedImage.setRGB(x, y, pixelReader.getArgb(x, y));
             }
         }
         return bufferedImage;
+    }
+
+    /**
+     * Save BufferedImage as PNG
+     *
+     * @param image      BufferedImage to save
+     * @param outputPath Path where the PNG file should be saved
+     * @return boolean indicating if save was successful
+     */
+    public static boolean saveAsPNG(BufferedImage image, String outputPath)
+    {
+        try
+        {
+            File outputFile = new File(outputPath);
+            // Create directories if they don't exist
+            outputFile.getParentFile().mkdirs();
+            return ImageIO.write(image, "PNG", outputFile);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

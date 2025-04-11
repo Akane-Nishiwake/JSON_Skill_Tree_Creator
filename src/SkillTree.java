@@ -1,19 +1,38 @@
 import java.util.ArrayList;
 import java.util.List;
 
-class SkillTreeWrapper {
+/**
+ * SkillTreeWrapper - Wrapper class for JSON serialization
+ */
+class SkillTreeWrapper
+{
     SkillTree skill_tree; // This ensures the correct JSON format
 
-    public SkillTreeWrapper(SkillTree skillTree) {
+    /**
+     * Constructor
+     *
+     * @param skillTree SkillTree to wrap
+     */
+    public SkillTreeWrapper(SkillTree skillTree)
+    {
         this.skill_tree = skillTree;
     }
 }
-public class SkillTree {
+
+/**
+ * SkillTree - Represents a complete skill tree structure
+ */
+public class SkillTree
+{
     String name;
     List<SkillNode> nodes;
 }
 
-class SkillNode {
+/**
+ * SkillNode - Represents a single node in the skill tree
+ */
+class SkillNode
+{
     String id;
     String name;
     String description;
@@ -21,7 +40,18 @@ class SkillNode {
     String effect;
     List<String> prerequisites;
 
-    public SkillNode(String i, String nam, String des, int c, String ef, List<String> pre) {
+    /**
+     * Constructor
+     *
+     * @param i   Node ID
+     * @param nam Node name
+     * @param des Node description
+     * @param c   Node cost
+     * @param ef  Node effect
+     * @param pre List of prerequisite node IDs
+     */
+    public SkillNode(String i, String nam, String des, int c, String ef, List<String> pre)
+    {
         id = i;
         name = nam;
         description = des;

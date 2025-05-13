@@ -27,13 +27,13 @@ Skill Tree Creator is a Java-based desktop application that allows users to crea
    cd skill-tree-creator
    ```
 2. Build the project using Maven:  
-  ```bash
-  mvn clean install
-```
-3.Run the application:  
-  ```bash
-  java -jar target/skill-tree-creator.jar
-  ```
+   ```bash
+     mvn clean install
+   ```
+3. Run the application:  
+   ```bash
+     java -jar target/skill-tree-creator.jar
+   ```
 
 ## Usage
 1. Launch the application.
